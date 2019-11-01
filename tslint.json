@@ -1,0 +1,37 @@
+{
+    "rules": {
+        "semicolon": true,
+        "quotemark": [
+            true,
+            "double"
+        ],
+        "curly": true,
+        "member-access": true,
+        "no-debugger": true,
+        "no-console": [
+            false,
+            "log"
+        ],
+        "prefer-const": true,
+        "triple-equals": [
+            true,
+            "allow-null-check"
+        ],
+        "indent": [
+            true,
+            "tabs"
+        ],
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
+        "function-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
+    }
+}

@@ -1,0 +1,39 @@
+{
+	"name": "4-in-a-row",
+	"version": "1.0.0",
+	"description": "",
+	"main": "main.js",
+	"scripts": {
+		"start": "gulp",
+		"lint": "tslint --project tslint.json",
+		"lint-quick-fix": "tslint --fix -c tslint.json 'src/**/*.ts'"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"keywords": [
+		"javascript"
+	],
+	"author": "sebferrer",
+	"license": "MIT",
+	"bugs": {
+		"url": ""
+	},
+	"homepage": "",
+	"devDependencies": {
+		"@types/jquery": "^3.3.31",
+		"browserify": "^16.2.2",
+		"del": "^3.0.0",
+		"gulp": "^3.9.1",
+		"gulp-typescript": "^5.0.0-alpha.3",
+		"run-sequence": "^2.2.1",
+		"tsify": "^4.0.0",
+		"tslint": "^5.11.0",
+		"typescript": "^3.0.1",
+		"vinyl-source-stream": "^2.0.0"
+	},
+	"dependencies": {
+		"jquery": "^3.4.1"
+	}
+}
