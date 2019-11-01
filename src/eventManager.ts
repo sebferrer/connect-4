@@ -3,35 +3,49 @@ import { dynamicCanvas, gameState } from "./main";
 import { PlayerType } from "./player";
 
 export class EventManager {
-	public mousePos: Point;
+	public position: Point;
+	public touchEnabled: boolean;
 
 	constructor() {
-		this.mousePos = new Point();
+		this.position = new Point();
+		this.touchEnabled = false;
 
-		document.onmousedown = event => this.mouseDown(event);
-		document.onmouseup = event => this.mouseUp(event);
+		document.onmouseup = event => {
+			this.release();
+		}
 		document.onmousemove = event => {
-			this.mousePos.x = event.offsetX - dynamicCanvas.offsetLeft;
-			this.mousePos.y = event.offsetY - dynamicCanvas.offsetTop;
+			this.move(event.offsetX, event.offsetY);
 		};
+
+		document.ontouchstart = event => { 
+			this.move(event.touches[0].clientX, event.touches[0].clientY);
+		};
+		document.ontouchmove = event => { 
+			if(!this.touchEnabled) {
+				this.touchEnabled = true;
+			}
+			this.move(event.touches[0].clientX, event.touches[0].clientY);
+		};
+		document.ontouchend = event => {
+			if(this.touchEnabled) {
+				this.release();
+				this.touchEnabled = false;
+			}
+		}
 	}
 
-	public mouseDown(event): void {
-		// const x = event.offsetX;
-		// const y = event.offsetY;
+	public move(x, y): void {
+		this.position.x = x - dynamicCanvas.offsetLeft;
+		this.position.y = y - dynamicCanvas.offsetTop;
 	}
 
-	public mouseUp(event): void {
-		// const x = event.offsetX;
-		// const y = event.offsetY;
+	public release(): void {
 		if(gameState.status === 1) {
 			return;
 		}
 		if(gameState.currentPlayer.type === PlayerType.AI && gameState.getOtherPlayer().type === PlayerType.AI) {
 			return;
 		}
-		// gameState.autoplayMlpRng(10);
-		// gameState.autoplayMlp();
 		gameState.play(gameState.currentPlayer, gameState.currentLineHovered);
 		if(gameState.currentPlayer.type === PlayerType.AI) {
 			gameState.autoplayMlp();

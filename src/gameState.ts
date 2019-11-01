@@ -96,9 +96,9 @@ export class GameState {
 		for(let i = 0; i < this.board.nbCols; i++) {
 			for(let j = 0; j < this.board.nbRows; j++) {
 				const token = this.board.tokens[i][j];
-				if(Collision.isCollisionMouseRectlangle(eventManager.mousePos.x, eventManager.mousePos.y, token.rect)) {
+				if(Collision.isCollisionMouseRectlangle(eventManager.position.x, eventManager.position.y, token.rect)) {
 					this.currentLineHovered = i;
-					if(token.value === 0) {
+					if([0, 3, 4].includes(token.value)) {
 						this.board.tokens[i][0].value = this.currentPlayer.id + 2;
 					}
 				}
