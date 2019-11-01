@@ -135,7 +135,6 @@ export class GameState {
 		}
 
 		if(this.board.isDraw()) {
-			alert("Draw!");
 			// this.reinit();
 			return;
 		}
@@ -153,7 +152,7 @@ export class GameState {
 
 	public win(player: Player): void {
 		recording.winner = player;
-		const json = recording.serialize(true, ";");
+		const json = recording.serialize(false, ";");
 		this.status = 1;
 
 		console.log(recording);

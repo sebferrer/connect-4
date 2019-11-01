@@ -38,7 +38,7 @@ export class Renderer {
 	}
 
 	public updateRecording() {
-		$('#recording').html(recording.serialize(true, ";"));
+		$('#recording').html(recording.serialize(false, ";"));
 	}
 
 	public drawCircle(dynamicCtx: CanvasRenderingContext2D, x: number, y: number, r: number) {
