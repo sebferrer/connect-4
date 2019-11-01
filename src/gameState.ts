@@ -21,6 +21,7 @@ export class GameState {
 	}
 
 	public init() {
+		(window as any).gameState = this;
 		this.players = PLAYERS;
 		this.currentPlayer = this.getPlayer(1);
 		this.board = new Board(6, 7);
@@ -28,13 +29,17 @@ export class GameState {
 		this.status = 0;
 		this.playTimer = this.getTimer("play");
 		this.playTimer.restart();
+		renderer.hideRestarButton();
+		if(recording != null) {
+			renderer.updateRecording();
+		}
 	}
 
 	public reinit() {
-		this.init();
-		if(record) {
+		if(record && recording != null) {
 			recording.init();
 		}
+		this.init();
 	}
 
 	public update(): void {
@@ -135,7 +140,7 @@ export class GameState {
 		}
 
 		if(this.board.isDraw()) {
-			// this.reinit();
+			renderer.showRestarButton;
 			return;
 		}
 
@@ -159,6 +164,8 @@ export class GameState {
 		console.log(json);
 
 		renderer.updateRecording();
+
+		renderer.showRestarButton();
 		
 		if(!recordGeneration) {
 			return;

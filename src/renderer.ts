@@ -30,11 +30,18 @@ export class Renderer {
 
 	public autoScale(): void {
 		this.scale(Math.round(window.innerHeight / canvasH * 100) / 100);
+
 		const canvas = $('#dynamic-canvas');
+
 		const recordingDiv = $('#recording');
 		recordingDiv.offset({'left': (canvas.offset().left + canvas.width())});
 		recordingDiv.width((window.innerWidth - canvas.width()) / 2);
 		recordingDiv.height(window.innerHeight);
+
+		const restartButton = $('#restart');
+		restartButton.width((window.innerWidth - canvas.width()) / 2);
+		restartButton.height(restartButton.width() / 2);
+		$('#restart-text').css('font-size', restartButton.width() / 7.5);
 	}
 
 	public updateRecording() {
@@ -98,6 +105,14 @@ export class Renderer {
 		context.arcTo(x, y + height, x, y, ratio);
 		context.arcTo(x, y, x + width, y, ratio);
 		context.closePath();
+	}
+
+	public showRestarButton() {
+		$('#restart').show();
+	}
+
+	public hideRestarButton() {
+		$('#restart').hide();
 	}
 }
 

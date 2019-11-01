@@ -45,6 +45,7 @@ export class Recording {
 	}
 
 	public init(): void {
+		this.winner = null;
 		this.history = new Array<RecordingStep>();
 		this.add(new RecordingStep(Board.copy(gameState.board).get2Dboard()));
 	}

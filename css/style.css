@@ -20,12 +20,26 @@ body {
     overflow: hidden;
 }
 
+#restart {
+    display: none;
+    position: absolute;
+    left: 0;
+    color: white;
+    background-color: #183693;
+}
+
+#restart-text {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
 #recording {
     position: absolute;
     color: white;
-    width: 0;
-    height: 0;
-    float: right;
     overflow-y: auto;
     overflow-x: auto;
 }
