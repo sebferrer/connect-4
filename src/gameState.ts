@@ -145,6 +145,8 @@ export class GameState {
 			return;
 		}
 
+		renderer.updateRecording();
+
 		this.togglePlayer();
 	}
 
@@ -156,6 +158,8 @@ export class GameState {
 
 		console.log(recording);
 		console.log(json);
+
+		renderer.updateRecording();
 		
 		if(!recordGeneration) {
 			return;

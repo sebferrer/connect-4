@@ -60,7 +60,8 @@ export class Recording {
 	public serialize(normalize?: boolean, delimiter?: string): string {
 		normalize = normalize == null ? false : normalize;
 		delimiter = delimiter == null ? " " : delimiter;
-		let json = "{\"winner\":"+this.winner.id+", ";
+		const winner = this.winner == null ? 0 : this.winner.id;
+		let json = "{\"winner\":"+winner+", ";
 		json += "\"history\":[";
 		for(let nstep = 1; nstep < this.history.length; nstep++) {
 			const playerId = this.history[nstep].player == null ? 0 : this.history[nstep].player.id;

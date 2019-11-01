@@ -19,3 +19,13 @@ body {
     padding: 0;
     overflow: hidden;
 }
+
+#recording {
+    position: absolute;
+    color: white;
+    width: 0;
+    height: 0;
+    float: right;
+    overflow-y: auto;
+    overflow-x: auto;
+}

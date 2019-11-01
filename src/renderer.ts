@@ -1,5 +1,5 @@
-import { IDrawable } from "./idrawable";
-import { canvasH, canvasW, mainLayers, gameState } from "./main";
+import $ from "jquery";
+import { canvasH, canvasW, mainLayers, gameState, recording } from "./main";
 
 export class Renderer {
 	public zoomScale: number;
@@ -30,6 +30,15 @@ export class Renderer {
 
 	public autoScale(): void {
 		this.scale(Math.round(window.innerHeight / canvasH * 100) / 100);
+		const canvas = $('#dynamic-canvas');
+		const recordingDiv = $('#recording');
+		recordingDiv.offset({'left': (canvas.offset().left + canvas.width())});
+		recordingDiv.width((window.innerWidth - canvas.width()) / 2);
+		recordingDiv.height(window.innerHeight);
+	}
+
+	public updateRecording() {
+		$('#recording').html(recording.serialize(true, ";"));
 	}
 
 	public drawCircle(dynamicCtx: CanvasRenderingContext2D, x: number, y: number, r: number) {
