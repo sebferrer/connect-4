@@ -44,6 +44,7 @@ export class GameState {
 		TIMERS.forEach(timer => timer.run());
 		
 		renderer.drawBoard(dynamicCtx);
+		this.board.drawVictory(dynamicCtx);
 
 		if(this.getPlayer(1).type === PlayerType.HUMAN || this.getPlayer(2).type === PlayerType.HUMAN) {
 			this.lineSelection();
@@ -151,7 +152,6 @@ export class GameState {
 	}
 
 	public win(player: Player): void {
-		alert("Player "+player.id+" wins !");
 		recording.winner = player;
 		const json = recording.serialize(true, ";");
 		this.status = 1;
