@@ -142,6 +142,8 @@ export class GameState {
 			recording.add(new RecordingStep(Board.copy(this.board).get2Dboard(), player, line), line);
 		}
 
+		renderer.updateRecording();
+
 		if(this.board.isDraw()) {
 			this.status = 1;
 			renderer.showRestarButton();
@@ -154,8 +156,6 @@ export class GameState {
 			return;
 		}
 
-		renderer.updateRecording();
-
 		this.togglePlayer();
 	}
 
@@ -166,8 +166,6 @@ export class GameState {
 
 		console.log(recording);
 		console.log(json);
-
-		renderer.updateRecording();
 
 		renderer.showRestarButton();
 		
