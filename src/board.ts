@@ -124,7 +124,7 @@ export class Board implements IDrawable {
 		let c = 0;
 		for(let i = this.nbCols - 1; i >= 0; i--) {
 			for(let j = this.nbRows - 1; j >= 0; j--) {
-				if(this.tokens[i][j].value === 0) {
+				if([0, 3, 4].includes(this.tokens[i][j].value)) {
 					break;
 				}
 				else {

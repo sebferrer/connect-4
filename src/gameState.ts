@@ -33,6 +33,9 @@ export class GameState {
 		if(recording != null) {
 			renderer.updateRecording();
 		}
+		if(gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
+			gameState.play(gameState.currentPlayer, 3);
+		}
 	}
 
 	public reinit() {
@@ -140,7 +143,8 @@ export class GameState {
 		}
 
 		if(this.board.isDraw()) {
-			renderer.showRestarButton;
+			this.status = 1;
+			renderer.showRestarButton();
 			return;
 		}
 
