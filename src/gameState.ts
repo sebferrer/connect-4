@@ -71,7 +71,7 @@ export class GameState {
 		const availableLines = this.getAvailableLines();
 		const randomLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 		console.log("Random play: " + randomLine);
-		this.play(gameState.currentPlayer, randomLine);
+		this.play(this.currentPlayer, randomLine);
 	}
 
 	public autoplayMlp() {
@@ -85,7 +85,12 @@ export class GameState {
 			}
 			else {
 				console.log("Prediction: "+ data.prediction + " >> " + data.confidence);
-				const bestLine = data.prediction - 1;
+				let bestLine = data.prediction - 1;
+				let availableLines = gameState.availableLines();
+				if(!availableLines.includes(bestLine)) {
+					gameState.currentPlayer.addPenalty();
+					bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
+				}
 				gameState.play(gameState.currentPlayer, bestLine);
 			}
 		});
@@ -99,6 +104,17 @@ export class GameState {
 		else {
 			this.autoplayMlp();
 		}
+	}
+
+	public availableLines(board?: Board): Array<number> {
+		board = board == null ? this.board : board;
+		let availableLines = new Array<number>();
+		for(let i = 0; i < board.tokens.length; i++) {
+			if([0, 3, 4].includes(board.tokens[i][0].value)) {
+				availableLines.push(i);
+			}
+		}
+		return availableLines;
 	}
 
 	public lineSelection(): void {
