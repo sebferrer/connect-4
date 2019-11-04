@@ -29,19 +29,39 @@ export class Renderer {
 	}
 
 	public autoScale(): void {
-		this.scale(Math.round(window.innerHeight / canvasH * 100) / 100);
+		let zoomScale = window.innerWidth > window.innerHeight ?
+			Math.round(window.innerHeight / canvasH * 100) / 100 :
+			Math.round(window.innerWidth / canvasW * 100) / 100;
+
+		this.scale(zoomScale);
 
 		const canvas = $('#dynamic-canvas');
-
 		const recordingDiv = $('#recording');
-		recordingDiv.offset({'left': (canvas.offset().left + canvas.width())});
-		recordingDiv.width((window.innerWidth - canvas.width()) / 2);
-		recordingDiv.height(window.innerHeight);
-
 		const restartButton = $('#restart');
-		restartButton.width((window.innerWidth - canvas.width()) / 2);
-		restartButton.height(restartButton.width() / 2);
-		$('#restart-text').css('font-size', restartButton.width() / 7.5);
+		const restartText = $('#restart-text');
+		
+		if(window.innerWidth > window.innerHeight) {
+			recordingDiv.offset({'left': (canvas.offset().left + canvas.width() )});
+			recordingDiv.width((window.innerWidth - canvas.width()) / 2);
+			recordingDiv.height(window.innerHeight);
+
+			restartButton.width((window.innerWidth - canvas.width()) / 2);
+			restartButton.height(window.innerHeight);
+			restartText.css('font-size', restartButton.width() / 7.5);
+		}
+		else {
+			canvas.offset({'top': window.innerHeight / 2 - canvas.height() / 2 });
+			
+			recordingDiv.width(window.innerWidth);
+			recordingDiv.height(window.innerHeight / 2 - canvas.height() / 2);
+			
+			restartButton.width(window.innerWidth);
+			restartButton.offset({'top': window.innerHeight / 2 + canvas.height() / 2 });
+			restartButton.height(window.innerHeight / 2 - canvas.height() / 2 );
+			restartText.css('font-size', restartButton.height() / 4);
+		}
+		restartText.offset({'top': restartButton.offset().top + restartButton.height() / 2 });
+
 	}
 
 	public updateRecording() {
