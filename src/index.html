@@ -10,14 +10,32 @@
 
 <body>
 
-    <div id="restart" onclick="gameState.reinit();">
-        <div id="restart-text">Restart</div>
+    <div id="menu">
+        <div class="menu-item" id="menu-hh" onclick="gameState.startMode('hh')" style="background-color:#9906EF">
+            <div class="menu-item-text">Human&nbsp;VS&nbsp;Human</div>
+        </div>
+        <div class="menu-item" id="menu-hai" onclick="gameState.startMode('hai')" style="background-color:#239DF9">
+            <div class="menu-item-text">Human&nbsp;VS&nbsp;AI</div>
+        </div>
+        <div class="menu-item" id="menu-aih" onclick="gameState.startMode('aih')" style="background-color:#62AC00">
+            <div class="menu-item-text">AI&nbsp;VS&nbsp;Human</div>
+        </div>
+        <div class="menu-item" id="menu-aiai" onclick="gameState.startMode('aiai')" style="background-color:#FFBF02">
+            <div class="menu-item-text">AI&nbsp;VS&nbsp;AI</div>
+        </div>
     </div>
-    <div id="recording"></div>
-
-    <div id="main-layers">
-        <!-- Dynamic elements -->
-        <canvas id="dynamic-canvas" width="660" height="480"></canvas>
+    <div id="game">
+        <div id="restart" onclick="gameState.reinit();">
+            <div id="restart-text">Restart</div>
+        </div>
+        <div id="back-menu" onclick="gameState.menu();">
+            <div id="back-menu-text">Menu</div>
+        </div>
+        <div id="recording"></div>
+        <div id="main-layers">
+            <!-- Dynamic elements -->
+            <canvas id="dynamic-canvas" width="660" height="480"></canvas>
+        </div>
     </div>
 
     <script src="bundle.js"></script>

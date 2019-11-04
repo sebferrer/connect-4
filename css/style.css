@@ -5,6 +5,26 @@ body {
     text-align: center;
     overflow: hidden;
 }
+/*
+#menu {
+    visibility: hidden;
+}
+
+#game {
+    display: none;
+}*/
+
+.menu-item {
+    position: absolute;
+}
+
+.menu-item-text {
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
 
 canvas {
     image-rendering: -moz-crisp-edges;    /* Firefox */
@@ -25,10 +45,27 @@ body {
     position: absolute;
     left: 0;
     color: white;
-    background-color: #183693;
+    background-color: #124191;
 }
 
 #restart-text {
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#back-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    color: white;
+    background-color: #03D0FF;
+}
+
+#back-menu-text {
     margin: 0;
     position: absolute;
     text-align: center;

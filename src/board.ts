@@ -106,7 +106,7 @@ export class Board implements IDrawable {
 				this.victoryTokens[i].y + this.victoryTokens[i].height/2,
 				this.victoryTokens[i].width/4, 0, 2 * Math.PI, false);
 			ctx.lineWidth = 5;
-			ctx.strokeStyle = 'yellow';
+			ctx.strokeStyle = "yellow";
 			ctx.stroke();
 		}
 	}

@@ -6,7 +6,8 @@ import $ from "jquery";
 import { Timer } from "./timer";
 import { TIMERS } from "./timers";
 import { Player, PlayerType } from "./player";
-import { PLAYERS } from "./players";
+import { PLAYERS, Players } from "./players";
+import { GameMode, GameModeUtil } from "./gameMode";
 
 export class GameState {
 	public board: Board;
@@ -15,14 +16,23 @@ export class GameState {
 	public currentLineHovered: number;
 	public status: number;
 	public playTimer: Timer;
+	public gameMode: GameMode;
 
 	constructor() {
+		(window as any).gameState = this;
 		this.init();
 	}
 
-	public init() {
-		(window as any).gameState = this;
-		this.players = PLAYERS;
+	public init(mode?: string) {
+		if(mode == null) {
+			if(this.gameMode == null) {
+				this.gameMode = GameMode.HUMAN_HUMAN;
+			}
+		}
+		else {
+			this.gameMode = GameModeUtil.getGameMode(mode);
+		}
+		this.players = this.gameMode == null ? PLAYERS : Players.getPlayersByMode(this.gameMode);
 		this.currentPlayer = this.getPlayer(1);
 		this.board = new Board(6, 7);
 		this.currentLineHovered = 0;
@@ -30,7 +40,9 @@ export class GameState {
 		this.playTimer = this.getTimer("play");
 		this.playTimer.restart();
 		renderer.hideRestarButton();
-		if(recording != null) {
+		renderer.hideBackMenuButton();
+		if(record && recording != null) {
+			recording.init();
 			renderer.updateRecording();
 		}
 		if(gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
@@ -38,11 +50,13 @@ export class GameState {
 		}
 	}
 
-	public reinit() {
-		if(record && recording != null) {
-			recording.init();
-		}
-		this.init();
+	public reinit(mode) {
+		this.init(mode);
+	}
+
+	public menu() {
+		renderer.showMenu();
+		renderer.hideGame();
 	}
 
 	public update(): void {
@@ -163,6 +177,7 @@ export class GameState {
 		if(this.board.isDraw()) {
 			this.status = 1;
 			renderer.showRestarButton();
+			renderer.showBackMenuButton();
 			return;
 		}
 
@@ -184,6 +199,7 @@ export class GameState {
 		console.log(json);
 
 		renderer.showRestarButton();
+		renderer.showBackMenuButton();
 		
 		if(!recordGeneration) {
 			return;
@@ -217,6 +233,12 @@ export class GameState {
 
 	public getTimer(id: string): Timer {
 		return TIMERS.find(item => item.id === id);
+	}
+
+	public startMode(mode: string): void {
+		renderer.showGame();
+		renderer.hideMenu();
+		gameState.reinit(mode);
 	}
 
 }

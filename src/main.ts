@@ -1,9 +1,10 @@
-import { GameState } from "./gamestate";
+import { GameState } from "./gameState";
 import { ImageBank } from "./imageBank";
 import { Renderer } from "./renderer";
 import { EventManager } from "./eventManager";
 import { Recording } from "./recording";
 import { PlayerType } from "./player";
+import { Player } from "./player";
 
 export let gameState: GameState;
 

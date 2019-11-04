@@ -40,6 +40,9 @@ export class EventManager {
 	}
 
 	public release(): void {
+		if(gameState == null) {
+			return;
+		}
 		if(gameState.status === 1) {
 			return;
 		}
