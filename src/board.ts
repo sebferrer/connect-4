@@ -98,7 +98,7 @@ export class Board implements IDrawable {
 		}
 	}
 
-	public drawVictory(ctx: CanvasRenderingContext2D) {
+	public drawVictory(ctx: CanvasRenderingContext2D): void {
 		for(let i = 0; i < this.victoryTokens.length; i++) {
 			ctx.beginPath();
 			ctx.arc(
@@ -109,6 +109,20 @@ export class Board implements IDrawable {
 			ctx.strokeStyle = "yellow";
 			ctx.stroke();
 		}
+	}
+
+	public drawLastMove(lastMove: Token, ctx: CanvasRenderingContext2D): void {
+		if(lastMove == null) {
+			return;
+		}
+		ctx.beginPath();
+		ctx.arc(
+			lastMove.x + lastMove.width/2,
+			lastMove.y + lastMove.height/2,
+			lastMove.width/2, 0, 2 * Math.PI, false);
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#FFDC75";
+		ctx.stroke();
 	}
 	
 	public nextRow(line: number): number {

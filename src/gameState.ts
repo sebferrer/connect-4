@@ -8,6 +8,7 @@ import { TIMERS } from "./timers";
 import { Player, PlayerType } from "./player";
 import { PLAYERS, Players } from "./players";
 import { GameMode, GameModeUtil } from "./gameMode";
+import { Token } from "./token";
 
 export class GameState {
 	public board: Board;
@@ -17,6 +18,7 @@ export class GameState {
 	public status: number;
 	public playTimer: Timer;
 	public gameMode: GameMode;
+	public lastMove: Token;
 
 	constructor() {
 		(window as any).gameState = this;
@@ -37,6 +39,7 @@ export class GameState {
 		this.board = new Board(6, 7);
 		this.currentLineHovered = 0;
 		this.status = 0;
+		this.lastMove = null;
 		this.playTimer = this.getTimer("play");
 		this.playTimer.restart();
 		renderer.hideRestarButton();
@@ -67,6 +70,7 @@ export class GameState {
 		
 		renderer.drawBoard(dynamicCtx);
 		this.board.drawVictory(dynamicCtx);
+		this.board.drawLastMove(this.lastMove, dynamicCtx);
 
 		if(this.getPlayer(1).type === PlayerType.HUMAN || this.getPlayer(2).type === PlayerType.HUMAN) {
 			this.lineSelection();
@@ -171,6 +175,8 @@ export class GameState {
 		if(record) {
 			recording.add(new RecordingStep(Board.copy(this.board).get2Dboard(), player, line), line);
 		}
+
+		this.lastMove = this.board.tokens[line][nextRow];
 
 		renderer.updateRecording();
 
