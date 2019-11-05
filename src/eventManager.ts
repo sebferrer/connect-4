@@ -11,35 +11,45 @@ export class EventManager {
 		this.touchEnabled = false;
 
 		document.onmouseup = event => {
-			this.release();
+			this.release(event.offsetX, event.offsetY);
 		}
 		document.onmousemove = event => {
 			this.move(event.offsetX, event.offsetY);
 		};
 
-		document.ontouchstart = event => { 
-			this.move(event.touches[0].clientX, event.touches[0].clientY);
+		document.ontouchstart = event => {
+			if(event.touches[0] != null) {
+				this.move(event.touches[0].clientX, event.touches[0].clientY);
+			}
 		};
 		document.ontouchmove = event => { 
-			if(!this.touchEnabled) {
+			if(!this.touchEnabled  && event.touches[0] != null) {
 				this.touchEnabled = true;
 			}
 			this.move(event.touches[0].clientX, event.touches[0].clientY);
 		};
 		document.ontouchend = event => {
-			if(this.touchEnabled) {
-				this.release();
+			if(this.touchEnabled && event.touches[0] != null) {
+				this.release(event.touches[0].clientX, event.touches[0].clientY);
 				this.touchEnabled = false;
 			}
 		}
 	}
 
-	public move(x, y): void {
+	public move(x: number, y: number): void {
+		if(x <= dynamicCanvas.offsetLeft || x >= dynamicCanvas.offsetLeft + dynamicCanvas.width ||
+			y <= dynamicCanvas.offsetTop || y >= dynamicCanvas.offsetTop + dynamicCanvas.height) {
+			return null;
+		}
 		this.position.x = x - dynamicCanvas.offsetLeft;
 		this.position.y = y - dynamicCanvas.offsetTop;
 	}
 
-	public release(): void {
+	public release(x: number, y: number): void {
+		if(x <= dynamicCanvas.offsetLeft || x >= dynamicCanvas.offsetLeft + dynamicCanvas.width ||
+			y <= dynamicCanvas.offsetTop || y >= dynamicCanvas.offsetTop + dynamicCanvas.height) {
+			return null;
+		}
 		if(gameState == null) {
 			return;
 		}

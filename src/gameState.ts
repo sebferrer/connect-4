@@ -96,21 +96,35 @@ export class GameState {
 		const currentStep = recording.history[recording.history.length-1].vectorizeBoard(false, ";");
 		console.log(currentStep);
 
+		const currentPlayerSettedService = $("#ai"+this.currentPlayer.id+"-text").val().toString();
+		if(currentPlayerSettedService !== "") {
+			this.currentPlayer.aiService = currentPlayerSettedService;
+		}
+
+		let availableLines = this.availableLines();
+		let bestLine;
 		$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
 		function(data) {
+			// console.log(JSON.stringify(data));
 			if(data.status !== "success") {
-				console.error("Error: a problem occured during the training");
+				console.error("Error: no AI answer (bad status)");
+				gameState.currentPlayer.addPenalty();
+				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			}
 			else {
 				console.log("Prediction: "+ data.prediction + " >> " + data.confidence);
-				let bestLine = data.prediction - 1;
-				let availableLines = gameState.availableLines();
+				bestLine = data.prediction - 1;
 				if(!availableLines.includes(bestLine)) {
 					gameState.currentPlayer.addPenalty();
 					bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 				}
-				gameState.play(gameState.currentPlayer, bestLine);
 			}
+			gameState.play(gameState.currentPlayer, bestLine);
+		}).fail(function() {
+			console.error("Error: no AI answer");
+			gameState.currentPlayer.addPenalty();
+			bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
+			gameState.play(gameState.currentPlayer, bestLine);
 		});
 	}
 
@@ -245,6 +259,7 @@ export class GameState {
 		renderer.showGame();
 		renderer.hideMenu();
 		gameState.reinit(mode);
+		renderer.scaleAIServices();
 	}
 
 }

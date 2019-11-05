@@ -12,6 +12,7 @@ export class Player {
 
 	private _aiService: string;
 	public get aiService(): string { return "http://" + this._aiService; }
+	public set aiService(aiService: string) { this._aiService = aiService; }
 
 	private _nbPenalties: number;
 	public get nbPenalties(): number { return this._nbPenalties; }

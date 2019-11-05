@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { canvasH, canvasW, mainLayers, gameState, recording } from "./main";
+import { PlayerType } from "./player";
 
 export class Renderer {
 	public zoomScale: number;
@@ -99,9 +100,35 @@ export class Renderer {
 			backMenu.offset({'top': window.innerHeight / 2 + canvas.height() / 2 });
 			backMenu.height(window.innerHeight / 2 - canvas.height() / 2 );
 			backMenuText.css('font-size', restartButton.height() / 4);
+
+			const aiServices = $('#ai-services');
+			aiServices.hide();
 		}
 		restartText.offset({'top': restartButton.offset().top + restartButton.height() / 2 });
 		backMenuText.offset({'top': backMenu.offset().top + backMenu.height() / 2 });
+	}
+
+	public scaleAIServices() {
+		const canvas = $('#dynamic-canvas');
+		const aiServices = $('#ai-services');
+
+		if(gameState != null) {
+			if(gameState.getPlayer(1).type !== PlayerType.AI) {
+				$("#ai1").hide();
+			}
+			if(gameState.getPlayer(2).type !== PlayerType.AI) {
+				$("#ai2").hide();
+			}
+			aiServices.offset({'top': 20 });
+			aiServices.width((window.innerWidth - canvas.width()) / 2);
+			aiServices.css('font-size', aiServices.width() / 10);
+			aiServices.children(".ai-service").each(function(i) {
+				const item = $(this);
+				const itemText = item.find('.ai-service-text');
+				itemText.width(aiServices.width() - aiServices.width() / 20);
+				itemText.css('font-size', itemText.width() / 10);
+			}) ;
+		}
 	}
 
 	public updateRecording() {

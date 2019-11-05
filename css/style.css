@@ -26,6 +26,12 @@ body {
     transform: translate(-50%, -50%);
 }
 
+#ai-services {
+    position: absolute;
+    color: white;
+    z-index: 10;
+}
+
 canvas {
     image-rendering: -moz-crisp-edges;    /* Firefox */
     image-rendering: -webkit-crisp-edges; /* Webkit (Safari) */
@@ -46,6 +52,7 @@ body {
     left: 0;
     color: white;
     background-color: #124191;
+    z-index: 20;
 }
 
 #restart-text {
@@ -63,6 +70,7 @@ body {
     left: 0;
     color: white;
     background-color: #03D0FF;
+    z-index: 20;
 }
 
 #back-menu-text {
