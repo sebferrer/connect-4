@@ -3,14 +3,14 @@ import { ImageBank } from "./imageBank";
 import { Renderer } from "./renderer";
 import { EventManager } from "./eventManager";
 import { Recording } from "./recording";
-import { PlayerType } from "./player";
-import { Player } from "./player";
 
 export let gameState: GameState;
 
 export const record = true;
 export let recording: Recording;
 export const recordGeneration = false;
+
+export const editAIServices = false;
 
 export const canvasW = 660;
 export const canvasH = 480;

@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { canvasH, canvasW, mainLayers, gameState, recording } from "./main";
+import { canvasH, canvasW, mainLayers, gameState, recording, editAIServices } from "./main";
 import { PlayerType } from "./player";
 
 export class Renderer {
@@ -37,6 +37,11 @@ export class Renderer {
 		this.scale(zoomScale);
 
 		this.scaleButtons();
+		if(!editAIServices) {
+			$('#ai-services').hide();
+			return;
+		}
+
 
 		const menu = $("#menu");
 		const game = $("#game");
@@ -109,6 +114,10 @@ export class Renderer {
 	}
 
 	public scaleAIServices() {
+		if(!editAIServices) {
+			return;
+		}
+
 		const canvas = $('#dynamic-canvas');
 		const aiServices = $('#ai-services');
 
