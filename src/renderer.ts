@@ -39,7 +39,6 @@ export class Renderer {
 		this.scaleButtons();
 		if(!editAIServices) {
 			$('#ai-services').hide();
-			return;
 		}
 
 
@@ -136,7 +135,7 @@ export class Renderer {
 				const itemText = item.find('.ai-service-text');
 				itemText.width(aiServices.width() - aiServices.width() / 20);
 				itemText.css('font-size', itemText.width() / 10);
-			}) ;
+			});
 		}
 	}
 
