@@ -19,6 +19,7 @@ export class GameState {
 	public playTimer: Timer;
 	public gameMode: GameMode;
 	public lastMove: Token;
+	public playing: boolean;
 
 	constructor() {
 		(window as any).gameState = this;
@@ -40,6 +41,7 @@ export class GameState {
 		this.currentLineHovered = 0;
 		this.status = 0;
 		this.lastMove = null;
+		this.playing = false;
 		this.playTimer = this.getTimer("play");
 		this.playTimer.restart();
 		renderer.hideRestarButton();
@@ -49,7 +51,7 @@ export class GameState {
 			renderer.updateRecording();
 		}
 		if(gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
-			gameState.play(gameState.currentPlayer, 3);
+			gameState.autoplayMlp();
 		}
 	}
 
@@ -93,6 +95,8 @@ export class GameState {
 	}
 
 	public autoplayMlp() {
+		this.playing = true;
+
 		const currentStep = recording.history[recording.history.length-1].vectorizeBoard(false, ";");
 		console.log(currentStep);
 
@@ -120,12 +124,18 @@ export class GameState {
 				}
 			}
 			gameState.play(gameState.currentPlayer, bestLine);
+
+			this.playing = false;
 		}).fail(function() {
 			console.error("Error: no AI answer");
 			gameState.currentPlayer.addPenalty();
 			bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			gameState.play(gameState.currentPlayer, bestLine);
+
+			this.playing = false;
 		});
+		
+		this.playing = false;
 	}
 
 	public autoplayMlpRng(probability: number): void {
@@ -180,6 +190,8 @@ export class GameState {
 	}
 
 	public play(player: Player, line: number): void {
+		this.playing = true;
+
 		const nextRow = this.board.nextRow(line);
 		if(nextRow === -1) {
 			return;
@@ -193,6 +205,8 @@ export class GameState {
 		this.lastMove = this.board.tokens[line][nextRow];
 
 		renderer.updateRecording();
+
+		this.playing = false;
 
 		if(this.board.isDraw()) {
 			this.status = 1;

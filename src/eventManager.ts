@@ -53,7 +53,7 @@ export class EventManager {
 		if(gameState == null) {
 			return;
 		}
-		if(gameState.status === 1) {
+		if(gameState.status === 1 || gameState.playing) {
 			return;
 		}
 		if(gameState.currentPlayer.type === PlayerType.AI && gameState.getOtherPlayer().type === PlayerType.AI) {

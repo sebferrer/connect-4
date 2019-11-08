@@ -32,9 +32,6 @@ window.onload = () => {
 		eventManager = new EventManager();
 		gameState = new GameState();
 		recording = new Recording();
-		if(gameState.currentPlayer.type === PlayerType.AI) {
-			gameState.play(gameState.currentPlayer, 3);
-		}
 		gameState.update();
 	});
 };
