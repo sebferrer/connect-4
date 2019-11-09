@@ -20,21 +20,24 @@ export class Board implements IDrawable {
 	public nbCols: number;
 	public tokens: Array<Array<Token>>;
 	public victoryTokens: Array<Token>;
+	public space: number;
+	public tokenSize: number;
 
 	constructor(nbRows: number, nbCols: number) {
 		this.nbRows = nbRows;
 		this.nbCols = nbCols;
 		this.tokens = new Array<Array<Token>>();
 		this.victoryTokens = new Array<Token>();
-		const tokenSize = canvasW > canvasH ? canvasH/(this.nbCols) : canvasW/(this.nbRows);
-		const remainW = canvasW - tokenSize*1.1*nbCols;
+		this.space = 1;
+		this.tokenSize = canvasW > canvasH ? canvasH/(this.nbCols) * 1.1 : canvasW/(this.nbRows) * 1.1;
+		const remainW = canvasW - this.tokenSize * this.space * nbCols;
 		for(let i = 0; i < this.nbCols; i++) {
 			this.tokens[i] = new Array<Token>();
 			for(let j = 0; j < this.nbRows; j++) {
 				this.tokens[i][j] = new Token(
 					new Rectangle(
-						new Point(remainW/2 + i*tokenSize*1.1, canvasH/50 + j*tokenSize*1.1),
-						new Point(remainW/2 + i*tokenSize*1.1+tokenSize, canvasH/50 + j*tokenSize*1.1+tokenSize)
+						new Point(remainW/2 + i * this.tokenSize * this.space, canvasH/50 + j * this.tokenSize * this.space),
+						new Point(remainW/2 + i * this.tokenSize * this.space + this.tokenSize, canvasH/50 + j * this.tokenSize * this.space + this.tokenSize)
 					)
 				);
 			}
@@ -126,8 +129,8 @@ export class Board implements IDrawable {
 	}
 	
 	public nextRow(line: number): number {
-		for(let i = this.tokens[line].length-1; i >= 0; i--) {
-			if(this.tokens[line][i].value === 0 || this.tokens[line][i].value === 3 || this.tokens[line][i].value === 4) {
+		for(let i = this.tokens[line].length - 1; i >= 0; i--) {
+			if([0, 3, 4].includes(this.tokens[line][i].value)) {
 				return i;
 			}
 		}
