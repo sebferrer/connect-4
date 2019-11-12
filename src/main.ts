@@ -3,6 +3,7 @@ import { ImageBank } from "./imageBank";
 import { Renderer } from "./renderer";
 import { EventManager } from "./eventManager";
 import { Recording } from "./recording";
+import { Contest } from "./contest";
 
 export let gameState: GameState;
 
@@ -10,7 +11,9 @@ export const record = true;
 export let recording: Recording;
 export const recordGeneration = false;
 
-export const editAIServices = true;
+export const editAIServices = false;
+
+export const contest = new Contest();
 
 export const canvasW = 660;
 export const canvasH = 480;

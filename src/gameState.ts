@@ -1,6 +1,5 @@
-import { canvasH, canvasW, dynamicCtx, renderer, eventManager, record, recording, gameState, recordGeneration, editAIServices } from "./main";
+import { canvasH, canvasW, dynamicCtx, renderer, eventManager, record, recording, gameState, recordGeneration, editAIServices, contest } from "./main";
 import { Board } from "./board";
-import { Collision } from "./collision";
 import { RecordingStep } from "./recording";
 import $ from "jquery";
 import { Timer } from "./timer";
@@ -26,7 +25,7 @@ export class GameState {
 		this.init();
 	}
 
-	public init(mode?: string) {
+	public init(mode?: string): void {
 		if(mode == null) {
 			if(this.gameMode == null) {
 				this.gameMode = GameMode.HUMAN_HUMAN;
@@ -35,6 +34,7 @@ export class GameState {
 		else {
 			this.gameMode = GameModeUtil.getGameMode(mode);
 		}
+
 		this.players = this.gameMode == null ? PLAYERS : Players.getPlayersByMode(this.gameMode);
 		this.currentPlayer = this.getPlayer(1);
 		this.board = new Board(6, 7);
@@ -55,16 +55,18 @@ export class GameState {
 			recording.init();
 			renderer.updateRecording();
 		}
-		if(!editAIServices && gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
-			gameState.autoplayMlp();
+		if(this.gameMode !== GameMode.CONTEST) {
+			if(!editAIServices && gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
+				gameState.autoplayMlp();
+			}
 		}
 	}
 
-	public reinit(mode) {
+	public reinit(mode): void {
 		this.init(mode);
 	}
 
-	public menu() {
+	public menu(): void {
 		renderer.showMenu();
 		renderer.hideGame();
 	}
@@ -84,7 +86,12 @@ export class GameState {
 		}
 		else {
 			if(this.status === 0 && this.playTimer.nextTick()) {
-				this.autoplayMlpRng(10);
+				if(this.gameMode === GameMode.AI_AI) {
+					this.autoplayMlpRng(10);
+				}
+				else if(this.gameMode === GameMode.CONTEST) {
+					this.autoplayContest();
+				}
 			}
 		}
 		
@@ -92,14 +99,18 @@ export class GameState {
 		window.requestAnimationFrame(() => self.update());
 	}
 
-	public autoplayRng() {
+	public autoplayContest(): void {
+		this.autoplayMlp();
+	}
+
+	public autoplayRng(): void {
 		const availableLines = this.getAvailableLines();
 		const randomLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 		console.log("Random play: " + randomLine);
 		this.play(this.currentPlayer, randomLine);
 	}
 
-	public autoplayMlp() {
+	public autoplayMlp(): void {
 		this.playing = true;
 
 		const currentStep = recording.history[recording.history.length-1].vectorizeBoard(false, ";");
@@ -210,10 +221,16 @@ export class GameState {
 		this.playing = false;
 
 		if(this.board.isDraw()) {
-			this.status = 1;
-			renderer.showRestarButton();
-			renderer.showBackMenuButton();
-			return;
+			if(this.gameMode !== GameMode.CONTEST) {
+				this.status = 1;
+				renderer.showRestarButton();
+				renderer.showBackMenuButton();
+				return;
+			}
+			else {
+				contest.setNextRound();
+				this.reinit(GameMode.CONTEST);
+			}
 		}
 
 		const check = this.board.check(this.currentPlayer);
@@ -233,8 +250,14 @@ export class GameState {
 		console.log(recording);
 		console.log(json);
 
-		renderer.showRestarButton();
-		renderer.showBackMenuButton();
+		if(this.gameMode !== GameMode.CONTEST) {
+			renderer.showRestarButton();
+			renderer.showBackMenuButton();
+		}
+		else {
+			contest.setNextRound();
+			this.reinit(GameMode.CONTEST);
+		}
 		
 		if(!recordGeneration) {
 			return;
@@ -277,7 +300,7 @@ export class GameState {
 		renderer.scaleAIServices();
 	}
 
-	public setAI() {
+	public setAI(): void {
 		if(this.getPlayer(1).type === PlayerType.AI) {
 			const currentPlayerSettedService = $("#ai1-text").val().toString();
 			if(currentPlayerSettedService !== "") {
@@ -294,7 +317,7 @@ export class GameState {
 		}
 	}
 
-	public start() {
+	public start(): void {
 		if(this.getPlayer(1).type === PlayerType.AI && this.getPlayer(2).type !== PlayerType.AI) {
 			gameState.autoplayMlp();
 			this.status = 0;

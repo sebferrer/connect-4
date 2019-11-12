@@ -1,5 +1,6 @@
 import { Player, PlayerType } from "./player";
 import { GameMode } from "./gameMode";
+import { contest } from "./main";
 
 export const PLAYERS: Player[] = [
 	new Player(PlayerType.HUMAN, 1),
@@ -34,6 +35,9 @@ export class Players {
 						new Player(PlayerType.AI, 1, "164.132.97.208:5001/mlp/predict"),
 						new Player(PlayerType.AI, 2, "164.132.97.208:5001/mlp/predict")
 					];
+					break;
+				case GameMode.CONTEST:
+					players = contest.getPlayers();
 					break;
 			}
 		return players;

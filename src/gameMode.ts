@@ -3,6 +3,7 @@ export enum GameMode {
     HUMAN_AI = "Human_AI",
     AI_HUMAN = "AI_human",
     AI_AI = "AI_AI",
+    CONTEST = "Contest"
 }
 
 export class GameModeUtil {
@@ -13,6 +14,7 @@ export class GameModeUtil {
             case "hai": return GameMode.HUMAN_AI; break;
             case "aih": return GameMode.AI_HUMAN; break;
             case "aiai": return GameMode.AI_AI; break;
+            case "contest": return GameMode.CONTEST; break;
             default: return null; break;
         }
     }

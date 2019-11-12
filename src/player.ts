@@ -10,6 +10,9 @@ export class Player {
 	private _id: number;
 	public get id(): number { return this._id; }
 
+	private _name: string;
+	public get name(): string { return this._name; }
+
 	private _aiService: string;
 	public get aiService(): string { return "http://" + this._aiService; }
 	public set aiService(aiService: string) { this._aiService = aiService; }
@@ -19,10 +22,11 @@ export class Player {
 	public set nbPenalties(nbPenalties: number) { this._nbPenalties = nbPenalties; }
 	public addPenalty() { this._nbPenalties++; }
 
-	constructor(type: PlayerType, id: number, aiService?: string) {
+	constructor(type: PlayerType, id: number, aiService?: string, name?: string) {
 		this._type = type;
 		this._id = id;
 		this._aiService = aiService;
+		this._name = name;
 		this._nbPenalties = 0;
 	}
 	
