@@ -1,4 +1,4 @@
-import { canvasH, canvasW, dynamicCtx, renderer, eventManager, record, recording, gameState, recordGeneration } from "./main";
+import { canvasH, canvasW, dynamicCtx, renderer, eventManager, record, recording, gameState, recordGeneration, editAIServices } from "./main";
 import { Board } from "./board";
 import { Collision } from "./collision";
 import { RecordingStep } from "./recording";
@@ -39,7 +39,12 @@ export class GameState {
 		this.currentPlayer = this.getPlayer(1);
 		this.board = new Board(6, 7);
 		this.currentLineHovered = 0;
-		this.status = this.getPlayer(1).type === PlayerType.HUMAN ? 0 : 1;
+		if(editAIServices) {
+			this.status = this.getPlayer(1).type === PlayerType.HUMAN ? 0 : 1;
+		}
+		else {
+			this.status = 0;
+		}
 		this.lastMove = null;
 		this.playing = false;
 		this.playTimer = this.getTimer("play");
@@ -50,9 +55,9 @@ export class GameState {
 			recording.init();
 			renderer.updateRecording();
 		}
-		//if(gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
-		//	gameState.autoplayMlp();
-		//}
+		if(!editAIServices && gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
+			gameState.autoplayMlp();
+		}
 	}
 
 	public reinit(mode) {
