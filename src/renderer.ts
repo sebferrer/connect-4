@@ -41,7 +41,6 @@ export class Renderer {
 			$('#ai-services').hide();
 		}
 
-
 		const menu = $("#menu");
 		const game = $("#game");
 		menu.show();
@@ -180,7 +179,7 @@ export class Renderer {
 	}
 
 	public drawBoard(dynamicCtx: CanvasRenderingContext2D) {
-		const r = gameState.board.tokens[0][0].width/2.4;
+		const r = gameState.board.tokens[0][0].width/2.6;
 
 		dynamicCtx.fillStyle = "white";
 

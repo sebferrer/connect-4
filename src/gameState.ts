@@ -153,26 +153,25 @@ export class GameState {
 		}
 		return availableLines;
 	}
-
+	
 	public lineSelection(): void {
 		for(let i = 0; i < this.board.nbCols; i++) {
-			for(let j = 0; j < this.board.nbRows; j++) {
-				const token = this.board.tokens[i][j];
-				if(Collision.isCollisionMouseRectlangle(eventManager.position.x, eventManager.position.y, token.rect)) {
-					this.currentLineHovered = i;
-					if([0, 3, 4].includes(token.value)) {
-						this.board.tokens[i][0].value = this.currentPlayer.id + 2;
-					}
+			let firstToken = this.board.tokens[i][0];
+			if(eventManager.position.x >= firstToken.x * renderer.zoomScale &&
+				eventManager.position.x <= (firstToken.x + firstToken.width) * renderer.zoomScale) {
+				this.currentLineHovered = i;
+				if([0, 3, 4].includes(firstToken.value)) {
+					firstToken.value = this.currentPlayer.id + 2;
 				}
-				else {
-					if(token.value === 3 || token.value === 4) {
-						this.board.tokens[i][0].value = 0;
-					}
+			}
+			else {
+				if([3, 4].includes(firstToken.value)) {
+					firstToken.value = 0;
 				}
 			}
 		}
 	}
-
+	
 	public getAvailableLines(board?: Board): Array<number> {
 		board = board == null ? this.board : board;
 		const availableLines = new Array<number>();
@@ -189,8 +188,10 @@ export class GameState {
 
 		const nextRow = this.board.nextRow(line);
 		if(nextRow === -1) {
+			this.playing = false;
 			return;
 		}
+		
 		this.board.tokens[line][nextRow].value = player.id;
 
 		if(record) {
