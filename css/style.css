@@ -16,6 +16,7 @@ body {
 
 .menu-item {
     position: absolute;
+    cursor: pointer;
 }
 
 .menu-item-text {
@@ -29,7 +30,43 @@ body {
 #ai-services {
     position: absolute;
     color: white;
-    z-index: 10;
+    z-index: 5;
+}
+
+#set-ai {
+    position: absolute;
+    left: 0;
+    color: white;
+    background-color: #124191;
+    z-index: 5;
+    cursor: pointer;
+}
+
+#set-ai-text {
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#set-ai-start {
+    position: absolute;
+    left: 0;
+    color: white;
+    background-color: #03D0FF;
+    z-index: 5;
+    cursor: pointer;
+}
+
+#set-ai-start-text {
+    margin: 0;
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 canvas {
@@ -54,6 +91,7 @@ body {
     color: white;
     background-color: #124191;
     z-index: 20;
+    cursor: pointer;
 }
 
 #restart-text {
@@ -72,6 +110,7 @@ body {
     color: white;
     background-color: #03D0FF;
     z-index: 20;
+    cursor: pointer;
 }
 
 #back-menu-text {

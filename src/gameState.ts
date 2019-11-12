@@ -39,7 +39,7 @@ export class GameState {
 		this.currentPlayer = this.getPlayer(1);
 		this.board = new Board(6, 7);
 		this.currentLineHovered = 0;
-		this.status = 0;
+		this.status = this.getPlayer(1).type === PlayerType.HUMAN ? 0 : 1;
 		this.lastMove = null;
 		this.playing = false;
 		this.playTimer = this.getTimer("play");
@@ -50,9 +50,9 @@ export class GameState {
 			recording.init();
 			renderer.updateRecording();
 		}
-		if(gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
-			gameState.autoplayMlp();
-		}
+		//if(gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
+		//	gameState.autoplayMlp();
+		//}
 	}
 
 	public reinit(mode) {
@@ -99,11 +99,6 @@ export class GameState {
 
 		const currentStep = recording.history[recording.history.length-1].vectorizeBoard(false, ";");
 		console.log(currentStep);
-
-		const currentPlayerSettedService = $("#ai"+this.currentPlayer.id+"-text").val().toString();
-		if(currentPlayerSettedService !== "") {
-			this.currentPlayer.aiService = currentPlayerSettedService;
-		}
 
 		let availableLines = this.availableLines();
 		let bestLine;
@@ -274,6 +269,34 @@ export class GameState {
 		renderer.hideMenu();
 		gameState.reinit(mode);
 		renderer.scaleAIServices();
+	}
+
+	public setAI() {
+		if(this.getPlayer(1).type === PlayerType.AI) {
+			const currentPlayerSettedService = $("#ai1-text").val().toString();
+			if(currentPlayerSettedService !== "") {
+				this.getPlayer(1).aiService = currentPlayerSettedService;
+				console.log("AI 1 set to " + currentPlayerSettedService);
+			}
+		}
+		if(this.getPlayer(2).type === PlayerType.AI) {
+			const currentPlayerSettedService = $("#ai2-text").val().toString();
+			if(currentPlayerSettedService !== "") {
+				this.getPlayer(2).aiService = currentPlayerSettedService;
+				console.log("AI 2 set to " + currentPlayerSettedService);
+			}
+		}
+	}
+
+	public start() {
+		if(this.getPlayer(1).type === PlayerType.AI && this.getPlayer(2).type !== PlayerType.AI) {
+			gameState.autoplayMlp();
+			this.status = 0;
+		}
+		else if(this.getPlayer(1).type === PlayerType.AI && this.getPlayer(2).type === PlayerType.AI) {
+			this.status = 0;
+		}
+		$("#set-ai-start").hide();
 	}
 
 }

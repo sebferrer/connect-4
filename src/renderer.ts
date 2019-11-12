@@ -105,20 +105,27 @@ export class Renderer {
 			backMenu.height(window.innerHeight / 2 - canvas.height() / 2 );
 			backMenuText.css('font-size', restartButton.height() / 4);
 
-			const aiServices = $('#ai-services');
-			aiServices.hide();
+			//const aiServices = $('#ai-services-container');
+			//aiServices.hide();
 		}
 		restartText.offset({'top': restartButton.offset().top + restartButton.height() / 2 });
 		backMenuText.offset({'top': backMenu.offset().top + backMenu.height() / 2 });
 	}
 
 	public scaleAIServices() {
+		const aiServicesContainer = $('#ai-services-container');
+		
 		if(!editAIServices) {
+			aiServicesContainer.hide();
 			return;
 		}
 
 		const canvas = $('#dynamic-canvas');
 		const aiServices = $('#ai-services');
+		const setAi = $('#set-ai');
+		const setAiText = $('#set-ai-text');
+		const setAiStart = $('#set-ai-start');
+		const setAiStartText = $('#set-ai-start-text');
 
 		if(gameState != null) {
 			if(gameState.getPlayer(1).type !== PlayerType.AI) {
@@ -127,6 +134,11 @@ export class Renderer {
 			if(gameState.getPlayer(2).type !== PlayerType.AI) {
 				$("#ai2").hide();
 			}
+			if(gameState.getPlayer(1).type !== PlayerType.AI && gameState.getPlayer(2).type !== PlayerType.AI) {
+				aiServicesContainer.hide();
+				return;
+			}
+
 			aiServices.offset({'top': 20 });
 			aiServices.width((window.innerWidth - canvas.width()) / 2);
 			aiServices.css('font-size', aiServices.width() / 10);
@@ -136,6 +148,23 @@ export class Renderer {
 				itemText.width(aiServices.width() - aiServices.width() / 20);
 				itemText.css('font-size', itemText.width() / 10);
 			});
+
+			setAi.offset({'top': aiServices.offset().top + aiServices.height() + 20});
+			setAi.width(aiServices.width());
+			setAi.height((window.innerHeight - aiServices.offset().top - aiServices.height()) / 2);
+			setAiText.css('font-size', setAi.width() / 4);
+			setAiText.offset({'top': setAi.offset().top + setAi.height() / 2 - setAi.width() / 4 });
+
+			if(gameState.getPlayer(1).type !== PlayerType.AI) {
+				setAiStart.hide();
+				return;
+			}
+
+			setAiStart.offset({'top': setAi.offset().top + setAi.height()});
+			setAiStart.width(aiServices.width());
+			setAiStart.height(window.innerHeight - setAiStart.offset().top - setAiStart.height());
+			setAiStartText.css('font-size', setAiStart.width() / 4);
+			setAiStartText.offset({'top': setAiStart.offset().top + setAiStart.height() / 2 - setAiStart.width() / 4 });
 		}
 	}
 

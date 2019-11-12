@@ -10,7 +10,7 @@ export const record = true;
 export let recording: Recording;
 export const recordGeneration = false;
 
-export const editAIServices = false;
+export const editAIServices = true;
 
 export const canvasW = 660;
 export const canvasH = 480;

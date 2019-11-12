@@ -31,17 +31,25 @@
         <div id="back-menu" onclick="gameState.menu();">
             <div id="back-menu-text">Menu</div>
         </div>
-        <div id="ai-services">
-            <div class="ai-service" id="ai1">
-                <label>AI Player 1:</label>
+        <div id="ai-services-container">
+            <div id="ai-services">
+                <div class="ai-service" id="ai1">
+                    <label>AI Player 1:</label>
+                    <br/>
+                    <input type="text" id="ai1-text" class="ai-service-text" />
+                </div>
                 <br/>
-                <input type="text" id="ai1-text" class="ai-service-text" />
+                <div class="ai-service" id="ai2">
+                    <label>AI Player 2:</label>
+                    <br/>
+                    <input type="text" id="ai2-text" class="ai-service-text" />
+                </div>
             </div>
-            <br/>
-            <div class="ai-service" id="ai2">
-                <label>AI Player 2:</label>
-                <br/>
-                <input type="text" id="ai2-text" class="ai-service-text" />
+            <div id="set-ai" onclick="gameState.setAI();">
+                <div id="set-ai-text">Set AI</div>
+            </div>
+            <div id="set-ai-start" onclick="gameState.start();">
+                <div id="set-ai-start-text">Start</div>
             </div>
         </div>
         <div id="recording"></div>
