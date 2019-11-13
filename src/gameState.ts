@@ -87,7 +87,7 @@ export class GameState {
 		else {
 			if(this.status === 0 && this.playTimer.nextTick()) {
 				if(this.gameMode === GameMode.AI_AI) {
-					this.autoplayMlpRng(10);
+					this.autoplayMlp();
 				}
 				else if(this.gameMode === GameMode.CONTEST) {
 					this.autoplayContest();
@@ -111,6 +111,11 @@ export class GameState {
 	}
 
 	public autoplayMlp(): void {
+		if(this.playing) {
+			console.log("already playing");
+			return;
+		}
+
 		this.playing = true;
 
 		const currentStep = recording.history[recording.history.length-1].vectorizeBoard(false, ";");
@@ -118,9 +123,14 @@ export class GameState {
 
 		let availableLines = this.availableLines();
 		let bestLine;
+
+		let self = this;
+		$.ajaxSetup({
+			timeout: 5000
+		});
 		$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
 		function(data) {
-			// console.log(JSON.stringify(data));
+			console.log(JSON.stringify(data));
 			if(data.status !== "success") {
 				console.error("Error: no AI answer (bad status)");
 				gameState.currentPlayer.addPenalty();
@@ -136,17 +146,17 @@ export class GameState {
 			}
 			gameState.play(gameState.currentPlayer, bestLine);
 
-			this.playing = false;
+			self.playTimer.restart();
+			self.playing = false;
 		}).fail(function() {
 			console.error("Error: no AI answer");
 			gameState.currentPlayer.addPenalty();
 			bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			gameState.play(gameState.currentPlayer, bestLine);
 
-			this.playing = false;
+			self.playTimer.restart();
+			self.playing = false;
 		});
-		
-		this.playing = false;
 	}
 
 	public autoplayMlpRng(probability: number): void {
