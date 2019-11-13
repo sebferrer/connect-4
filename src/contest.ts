@@ -2,12 +2,12 @@ import { Participant } from "./participant";
 import { Player, PlayerType } from "./player";
 
 export const PARTICIPANTS: Participant[] = [
-    new Participant("seferrer", "164.132.97.208:5001/mlp/predict"),
-    new Participant("thulot", "164.132.97.208:5001/mlp/predict"),
-    new Participant("pmahiddin", "164.132.97.208:5001/mlp/predict"),
-    new Participant("rgourlat", "164.132.97.208:5001/mlp/predict"),
-    new Participant("apacheco", "164.132.97.208:5001/mlp/predict"),
-    new Participant("ebartzeli", "164.132.97.208:5001/mlp/predict")
+    new Participant("seb", "164.132.97.208:5001/mlp/predict"),
+    new Participant("titi", "164.132.97.208:5001/mlp/predict"),
+    new Participant("patpat", "164.132.97.208:5001/mlp/predict")/*,
+    new Participant("romain", "164.132.97.208:5001/mlp/predict"),
+    new Participant("aracely", "164.132.97.208:5001/mlp/predict"),
+    new Participant("evgenios", "164.132.97.208:5001/mlp/predict")*/
 ];
 
 export class Contest {
@@ -29,15 +29,30 @@ export class Contest {
     }
 
     public setNextRound(): void {
-        if(this.player2Index + 1 > PARTICIPANTS.length) {
-            this.player1Index++;
-            if(this.player1Index + 1 > PARTICIPANTS.length) {
-                this.finished = true;
+        if(this.player1Index === this.player2Index && this.player1Index === PARTICIPANTS.length) {
+            this.finished = true;
+            return;
+        }
+
+        if(this.player2Index + 1 < PARTICIPANTS.length) {
+            this.player2Index++;
+            if(this.player2Index === this.player1Index) {
+                if(this.player1Index + 1 === PARTICIPANTS.length) {
+                    this.finished = true;
+                }
+                else {
+                    this.player2Index++;
+                }
             }
         }
         else {
-            this.player2Index++;
-            this.player1Index = 0;
+            this.player2Index = 0;
+            if(this.player1Index + 1 < PARTICIPANTS.length) {
+                this.player1Index++;
+            }
+            else {
+                this.finished = true;
+            }
         }
     }
 

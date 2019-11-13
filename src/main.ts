@@ -11,7 +11,7 @@ export const record = true;
 export let recording: Recording;
 export const recordGeneration = false;
 
-export const editAIServices = true;
+export const editAIServices = false;
 
 export const contest = new Contest();
 

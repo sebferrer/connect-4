@@ -231,16 +231,7 @@ export class GameState {
 		this.playing = false;
 
 		if(this.board.isDraw()) {
-			if(this.gameMode !== GameMode.CONTEST) {
-				this.status = 1;
-				renderer.showRestarButton();
-				renderer.showBackMenuButton();
-				return;
-			}
-			else {
-				contest.setNextRound();
-				this.reinit(GameMode.CONTEST);
-			}
+			this.end();
 		}
 
 		const check = this.board.check(this.currentPlayer);
@@ -252,6 +243,22 @@ export class GameState {
 		this.togglePlayer();
 	}
 
+	public end(): void {
+		if(this.gameMode !== GameMode.CONTEST) {
+			renderer.showRestarButton();
+			renderer.showBackMenuButton();
+		}
+		else {
+			contest.setNextRound();
+			if(contest.finished) {
+				this.status = 1;
+			}
+			else {
+				setTimeout(() => this.reinit("contest"), 5000);
+			}
+		}
+	}
+
 	public win(player: Player): void {
 		recording.winner = player;
 		const json = recording.serialize(false, ";");
@@ -260,14 +267,7 @@ export class GameState {
 		console.log(recording);
 		console.log(json);
 
-		if(this.gameMode !== GameMode.CONTEST) {
-			renderer.showRestarButton();
-			renderer.showBackMenuButton();
-		}
-		else {
-			contest.setNextRound();
-			this.reinit(GameMode.CONTEST);
-		}
+		this.end();
 		
 		if(!recordGeneration) {
 			return;
