@@ -231,6 +231,12 @@ export class GameState {
 		this.playing = false;
 
 		if(this.board.isDraw()) {
+			recording.j1Penalties = this.getPlayer(1).nbPenalties;
+			recording.j2Penalties = this.getPlayer(2).nbPenalties;
+			const json = recording.serialize(false, ";");
+
+			this.generateRecording(json);
+
 			this.end();
 		}
 
@@ -261,6 +267,8 @@ export class GameState {
 
 	public win(player: Player): void {
 		recording.winner = player;
+		recording.j1Penalties = this.getPlayer(1).nbPenalties;
+		recording.j2Penalties = this.getPlayer(2).nbPenalties;
 		const json = recording.serialize(false, ";");
 		this.status = 1;
 
@@ -269,6 +277,10 @@ export class GameState {
 
 		this.end();
 		
+		this.generateRecording(json);
+	}
+
+	public generateRecording(json) {
 		if(!recordGeneration) {
 			return;
 		}

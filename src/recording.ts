@@ -39,6 +39,8 @@ export class Recording {
 
 	public history: Array<RecordingStep>;
 	public winner: Player;
+	public j1Penalties: number;
+	public j2Penalties: number;
 
 	constructor() {
 		this.init();
@@ -63,13 +65,15 @@ export class Recording {
 		delimiter = delimiter == null ? " " : delimiter;
 		const winner = this.winner == null ? 0 : this.winner.id;
 		let json = "{\"winner\":"+winner+", ";
+		json += "\"j1Penalties\":"+this.j1Penalties+", ";
+		json += "\"j2Penalties\":"+this.j2Penalties+", ";
 		json += "\"history\":[";
 		for(let nstep = 1; nstep < this.history.length; nstep++) {
 			const playerId = this.history[nstep].player == null ? 0 : this.history[nstep].player.id;
 			const playerName = this.history[nstep].player == null ? "" : this.history[nstep].player.name;
 			json += "{\"nstep\":"+nstep+",";
 			json += "\"player\":"+playerId+",";
-			json += "\"name\":"+playerName+",";
+			json += "\"name\":\""+playerName+"\",";
 			json += "\"line\":"+this.history[nstep].line+",";
 			json += "\"nextLine\":"+this.history[nstep].nextLine+",";
 			json += "\"step\":\"";

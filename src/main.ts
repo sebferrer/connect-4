@@ -9,7 +9,7 @@ export let gameState: GameState;
 
 export const record = true;
 export let recording: Recording;
-export const recordGeneration = false;
+export const recordGeneration = true;
 
 export const editAIServices = false;
 
