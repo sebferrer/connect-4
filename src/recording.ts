@@ -7,11 +7,13 @@ export class RecordingStep {
 	public player: Player;
 	public line: number;
 	public nextLine: number;
+	public wrongLine: number;
 
-	constructor(step: Array<Array<number>>, player?: Player, line?: number) {
+	constructor(step: Array<Array<number>>, player?: Player, line?: number, wrongLine?: number) {
 		this.step = step;
 		this.player = player;
 		this.line = line == null ? 0 : line + 1;
+		this.wrongLine = wrongLine == null ? 0 : wrongLine + 1;
 		this.nextLine = 0;
 	}
 
@@ -38,16 +40,18 @@ export class RecordingStep {
 export class Recording {
 
 	public history: Array<RecordingStep>;
-	public winner: Player;
-	public j1Penalties: number;
-	public j2Penalties: number;
+	public player1: Player;
+	public player2: Player;
+	public winner: number;
 
 	constructor() {
 		this.init();
 	}
 
-	public init(): void {
-		this.winner = null;
+	public init(player1?: Player, player2?: Player): void {
+		this.player1 = player1;
+		this.player2 = player2;
+		this.winner = 0;
 		this.history = new Array<RecordingStep>();
 		this.add(new RecordingStep(Board.copy(gameState.board).get2Dboard()));
 	}
@@ -63,10 +67,9 @@ export class Recording {
 	public serialize(normalize?: boolean, delimiter?: string): string {
 		normalize = normalize == null ? false : normalize;
 		delimiter = delimiter == null ? " " : delimiter;
-		const winner = this.winner == null ? 0 : this.winner.id;
-		let json = "{\"winner\":"+winner+", ";
-		json += "\"j1Penalties\":"+this.j1Penalties+", ";
-		json += "\"j2Penalties\":"+this.j2Penalties+", ";
+		let json = "{\"winner\":"+this.winner+", ";
+		json += "\"player1\":{\"name\":\""+this.player1.name+"\", \"nbPenalties\": "+this.player1.nbPenalties+"}, ";
+		json += "\"player2\":{\"name\":\""+this.player2.name+"\", \"nbPenalties\": "+this.player2.nbPenalties+"}, ";
 		json += "\"history\":[";
 		for(let nstep = 1; nstep < this.history.length; nstep++) {
 			const playerId = this.history[nstep].player == null ? 0 : this.history[nstep].player.id;
@@ -75,6 +78,7 @@ export class Recording {
 			json += "\"player\":"+playerId+",";
 			json += "\"name\":\""+playerName+"\",";
 			json += "\"line\":"+this.history[nstep].line+",";
+			json += "\"wrongLine\":"+this.history[nstep].wrongLine+",";
 			json += "\"nextLine\":"+this.history[nstep].nextLine+",";
 			json += "\"step\":\"";
 			for(let i = 0; i < this.history[nstep].step.length; i++) {

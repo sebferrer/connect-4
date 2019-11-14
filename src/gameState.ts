@@ -52,7 +52,7 @@ export class GameState {
 		renderer.hideRestarButton();
 		renderer.hideBackMenuButton();
 		if(record && recording != null) {
-			recording.init();
+			recording.init(this.getPlayer(1), this.getPlayer(2));
 			renderer.updateRecording();
 		}
 		if(this.gameMode !== GameMode.CONTEST) {
@@ -122,6 +122,7 @@ export class GameState {
 		console.log(currentStep);
 
 		let availableLines = this.availableLines();
+		let wrongLine;
 		let bestLine;
 
 		let self = this;
@@ -131,20 +132,21 @@ export class GameState {
 		$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
 		function(data) {
 			console.log(JSON.stringify(data));
-			if(data.status !== "success") {
+			/*if(data.status !== "success") {
 				console.error("Error: no AI answer (bad status)");
 				gameState.currentPlayer.addPenalty();
 				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			}
-			else {
-				console.log("Prediction: "+ data.prediction + " >> " + data.confidence);
-				bestLine = data.prediction - 1;
-				if(!availableLines.includes(bestLine)) {
-					gameState.currentPlayer.addPenalty();
-					bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
-				}
+			else {*/
+			console.log("Prediction: "+ data.prediction + " >> " + data.confidence);
+			bestLine = data.prediction - 1;
+			if(!availableLines.includes(bestLine)) {
+				gameState.currentPlayer.addPenalty();
+				wrongLine = bestLine;
+				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			}
-			gameState.play(gameState.currentPlayer, bestLine);
+			//}
+			gameState.play(gameState.currentPlayer, bestLine, wrongLine);
 
 			self.playTimer.restart();
 			self.playing = false;
@@ -152,7 +154,7 @@ export class GameState {
 			console.error("Error: no AI answer");
 			gameState.currentPlayer.addPenalty();
 			bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
-			gameState.play(gameState.currentPlayer, bestLine);
+			gameState.play(gameState.currentPlayer, bestLine, -2);
 
 			self.playTimer.restart();
 			self.playing = false;
@@ -209,7 +211,7 @@ export class GameState {
 		return availableLines;
 	}
 
-	public play(player: Player, line: number): void {
+	public play(player: Player, line: number, wrongLine?: number): void {
 		this.playing = true;
 
 		const nextRow = this.board.nextRow(line);
@@ -221,7 +223,7 @@ export class GameState {
 		this.board.tokens[line][nextRow].value = player.id;
 
 		if(record) {
-			recording.add(new RecordingStep(Board.copy(this.board).get2Dboard(), player, line), line);
+			recording.add(new RecordingStep(Board.copy(this.board).get2Dboard(), player, line, wrongLine), line);
 		}
 
 		this.lastMove = this.board.tokens[line][nextRow];
@@ -231,8 +233,6 @@ export class GameState {
 		this.playing = false;
 
 		if(this.board.isDraw()) {
-			recording.j1Penalties = this.getPlayer(1).nbPenalties;
-			recording.j2Penalties = this.getPlayer(2).nbPenalties;
 			const json = recording.serialize(false, ";");
 
 			this.generateRecording(json);
@@ -266,9 +266,7 @@ export class GameState {
 	}
 
 	public win(player: Player): void {
-		recording.winner = player;
-		recording.j1Penalties = this.getPlayer(1).nbPenalties;
-		recording.j2Penalties = this.getPlayer(2).nbPenalties;
+		recording.winner = player.id;
 		const json = recording.serialize(false, ";");
 		this.status = 1;
 

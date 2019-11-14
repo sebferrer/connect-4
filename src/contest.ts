@@ -4,10 +4,10 @@ import { Player, PlayerType } from "./player";
 export const PARTICIPANTS: Participant[] = [
     new Participant("seb", "164.132.97.208:5001/mlp/predict"),
     new Participant("titi", "164.132.97.208:5001/mlp/predict"),
-    new Participant("patpat", "164.132.97.208:5001/mlp/predict")/*,
+    new Participant("patpat", "164.132.97.208:5001/mlp/predict"),
     new Participant("romain", "164.132.97.208:5001/mlp/predict"),
     new Participant("aracely", "164.132.97.208:5001/mlp/predict"),
-    new Participant("evgenios", "164.132.97.208:5001/mlp/predict")*/
+    new Participant("evgenios", "164.132.97.208:5001/mlp/predict")
 ];
 
 export class Contest {
