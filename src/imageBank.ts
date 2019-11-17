@@ -15,7 +15,6 @@ export class ImageBank {
 		"assets/img/grey.png",
 		"assets/img/corporate/1.png",
 		"assets/img/corporate/2.png",
-		"assets/img/corporate/3.png",
 		"assets/img/corporate/4.png"
 	];
 

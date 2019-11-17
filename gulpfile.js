@@ -12,10 +12,11 @@ gulp.task("clean", () => del(["./dist"]));
 /* Copy tasks */
 gulp.task("copy-html", () => gulp.src("src/*.html").pipe(gulp.dest("dist")));
 gulp.task("copy-css", () => gulp.src("./css/**/*.css").pipe(gulp.dest("./dist/css")));
+gulp.task("copy-tmp-img", () => gulp.src("./tmp/img/**/*.*").pipe(gulp.dest("./dist/assets/img")));
 gulp.task("copy-assets", () => gulp.src("./assets/**/**/*.*").pipe(gulp.dest("./dist/assets")));
-gulp.task("copy-tmp", () => gulp.src("./tmp/*.*").pipe(gulp.dest("./dist")));
+gulp.task("copy-tmp-json", () => gulp.src("./tmp/json/*.*").pipe(gulp.dest("./dist")));
 gulp.task("copy-json", () => gulp.src("./json/*.json.js").pipe(gulp.dest("./dist")));
-gulp.task("copy-things", ["copy-html", "copy-css", "copy-assets", "copy-tmp", "copy-json"]);
+gulp.task("copy-things", ["copy-html", "copy-css", "copy-tmp-img", "copy-assets", "copy-tmp-json", "copy-json"]);
 
 /* TS */
 gulp.task("ts", function () {
