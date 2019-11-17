@@ -67,9 +67,13 @@ export class Recording {
 	public serialize(normalize?: boolean, delimiter?: string): string {
 		normalize = normalize == null ? false : normalize;
 		delimiter = delimiter == null ? " " : delimiter;
+		let player1Name = this.player1 == null ? "" : this.player1.name;
+		let player2Name = this.player2 == null ? "" : this.player2.name;
+		let player1NbPenalties = this.player1 == null ? "" : this.player1.nbPenalties;
+		let player2NbPenalties = this.player2 == null ? "" : this.player2.nbPenalties;
 		let json = "{\"winner\":"+this.winner+", ";
-		json += "\"player1\":{\"name\":\""+this.player1.name+"\", \"nbPenalties\": "+this.player1.nbPenalties+"}, ";
-		json += "\"player2\":{\"name\":\""+this.player2.name+"\", \"nbPenalties\": "+this.player2.nbPenalties+"}, ";
+		json += "\"player1\":{\"name\":\""+player1Name+"\", \"nbPenalties\": "+player1NbPenalties+"}, ";
+		json += "\"player2\":{\"name\":\""+player2Name+"\", \"nbPenalties\": "+player2NbPenalties+"}, ";
 		json += "\"history\":[";
 		for(let nstep = 1; nstep < this.history.length; nstep++) {
 			const playerId = this.history[nstep].player == null ? 0 : this.history[nstep].player.id;
