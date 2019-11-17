@@ -56,9 +56,9 @@ export class Contest {
         }
     }
 
-    public getParticipantByCSL(csl: string): Participant {
+    public getParticipantById(id: string): Participant {
         for(let i = 0; i < PARTICIPANTS.length; i++) {
-            if(PARTICIPANTS[i].csl === csl) {
+            if(PARTICIPANTS[i].id === id) {
                 return PARTICIPANTS[i];
             }
         }
@@ -67,9 +67,31 @@ export class Contest {
 
     public getPlayers(index1: number = this.player1Index, index2: number = this.player2Index): Array<Player> {
         return [
-            new Player(PlayerType.AI, 1, PARTICIPANTS[index1].service, PARTICIPANTS[index1].csl),
-            new Player(PlayerType.AI, 2, PARTICIPANTS[index2].service, PARTICIPANTS[index2].csl)
+            new Player(PlayerType.AI, 1, PARTICIPANTS[index1].service, PARTICIPANTS[index1].id),
+            new Player(PlayerType.AI, 2, PARTICIPANTS[index2].service, PARTICIPANTS[index2].id)
         ];
+    }
+
+    public serializeParticipants(): string {
+        let json = "[";
+
+        for(let i = 0; i < PARTICIPANTS.length; i++) {
+            json += "{\"id\": \""+PARTICIPANTS[i].id+"\",";
+            json += "\"service\": \""+PARTICIPANTS[i].service+"\",";
+            json += "\"nbWin\": \""+PARTICIPANTS[i].nbWin+"\",";
+            json += "\"nbLose\": \""+PARTICIPANTS[i].nbLose+"\",";
+            json += "\"nbDraw\": \""+PARTICIPANTS[i].nbDraw+"\",";
+            json += "\"nbPoints\": \""+PARTICIPANTS[i].nbPoints+"\",";
+            json += "\"nbPenalties\": \""+PARTICIPANTS[i].nbPenalties+"\",";
+            json += "\"finalScore\": \""+PARTICIPANTS[i].finalScore+"\"}";
+            if(i < PARTICIPANTS.length - 1) {
+                json += ",";
+            }
+        }
+
+        json += "]";
+
+        return json;
     }
 
 }

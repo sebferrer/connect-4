@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { canvasH, canvasW, mainLayers, gameState, recording, editAIServices } from "./main";
+import { canvasH, canvasW, mainLayers, gameState, recording, editAIServices, coporate, IMAGE_BANK } from "./main";
 import { PlayerType } from "./player";
 
 export class Renderer {
@@ -47,7 +47,7 @@ export class Renderer {
 		game.hide();
 	}
 
-	public scaleButtons() {
+	public scaleButtons(): void {
 		const canvas = $('#dynamic-canvas');
 		const recordingDiv = $('#recording');
 		const restartButton = $('#restart');
@@ -111,7 +111,7 @@ export class Renderer {
 		backMenuText.offset({'top': backMenu.offset().top + backMenu.height() / 2 });
 	}
 
-	public scaleAIServices() {
+	public scaleAIServices(): void {
 		const aiServicesContainer = $('#ai-services-container');
 		
 		if(!editAIServices) {
@@ -167,39 +167,71 @@ export class Renderer {
 		}
 	}
 
-	public updateRecording() {
+	public drawCorporate(ctx: CanvasRenderingContext2D): void {
+		if(coporate) {
+			// @ts-ignore
+			let corporate = corporateJSON;
+
+			ctx.drawImage(IMAGE_BANK.pictures["assets/img/corporate/1.png"],
+				0, 0, 282, 281,
+				canvasW / 200, canvasW / 200, 282 / canvasW * 140, 281 / canvasW * 140);
+				
+			ctx.drawImage(IMAGE_BANK.pictures["assets/img/corporate/2.png"],
+				0, 0, 257, 294,
+				canvasW - canvasW / 11, canvasW / 200, 257 / canvasW * 140, 294 / canvasW * 140);
+
+			ctx.drawImage(IMAGE_BANK.pictures["assets/img/corporate/4.png"],
+				0, 0, 313, 53,
+				canvasW / 200, canvasH - canvasH / 18, 313 / canvasW * 140, 53 / canvasW * 140);
+			
+			if(corporate.length === 0) {
+				return;
+			}
+
+			let fontFamily = "px Segoe UI,Frutiger,Frutiger Linotype,Dejavu Sans,Helvetica Neue,Arial,sans-serif";
+			ctx.fillStyle = "white";
+
+			ctx.font = (canvasW/25) + fontFamily;
+			ctx.fillText(corporate[0].value, canvasW - canvasW / 9.5, canvasH - canvasH / 30);
+			ctx.fillText(corporate[1].value, canvasW / 100, 294 / canvasW * 210);
+			ctx.font = (canvasW/45) + fontFamily;
+			ctx.fillText(corporate[2].value, canvasW - canvasW / 9, 281 / canvasW * 210)
+		}
+	}
+
+	public updateRecording(): void {
 		$('#recording').html(recording.serialize(false, ";"));
 	}
 
-	public drawCircle(dynamicCtx: CanvasRenderingContext2D, x: number, y: number, r: number) {
-		dynamicCtx.beginPath();
-		dynamicCtx.arc(x,y,r,0,Math.PI*2);
-		dynamicCtx.closePath();
-		dynamicCtx.fill();
+	public drawCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
+		ctx.beginPath();
+		ctx.arc(x,y,r,0,Math.PI*2);
+		ctx.closePath();
+		ctx.fill();
 	}
 
-	public drawBoard(dynamicCtx: CanvasRenderingContext2D) {
+	public drawBoard(ctx: CanvasRenderingContext2D): void {
 		const r = gameState.board.tokens[0][0].width/2.6;
 
-		dynamicCtx.fillStyle = "white";
+		ctx.fillStyle = "white";
 
 		for(let i = 0; i < gameState.board.nbCols; i++) {
 			for(let j = 0; j < gameState.board.nbRows; j++) {
 				const token = gameState.board.tokens[i][j];
-				this.drawCircle(dynamicCtx, token.x+token.width/2, token.y+token.height/2, r);
+				this.drawCircle(ctx, token.x+token.width/2, token.y+token.height/2, r);
 			}
 		}
 
-		dynamicCtx.globalCompositeOperation = "source-atop";
+		ctx.globalCompositeOperation = "source-atop";
 
-		gameState.board.draw(dynamicCtx);
+		gameState.board.draw(ctx);
 
-		dynamicCtx.globalCompositeOperation = "destination-over";
+		ctx.globalCompositeOperation = "destination-over";
 
-		dynamicCtx.fillStyle = "#1f80cd";
-		dynamicCtx.fillRect(0,0,canvasW,canvasH);
+		ctx.fillStyle = "#1f80cd";
+		ctx.fillRect(0,0,canvasW,canvasH);
 
-		dynamicCtx.globalCompositeOperation = "source-over";
+		ctx.globalCompositeOperation = "source-over";
 	}
 
 	/** Draws a rectangle with a border radius */
@@ -209,56 +241,56 @@ export class Renderer {
 	}
 
 	/** Draws a rectangle with a border radius */
-	public fillRoundRect(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, ratio: number): void {
-		this.makeRoundRectPath(context, x, y, width, height, ratio);
-		context.fill();
+	public fillRoundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, ratio: number): void {
+		this.makeRoundRectPath(ctx, x, y, width, height, ratio);
+		ctx.fill();
 	}
 
-	private makeRoundRectPath(context: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, ratio: number): void {
+	private makeRoundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, ratio: number): void {
 		if (width < 2 * ratio) {
 			ratio = width / 2;
 		}
 		if (height < 2 * ratio) {
 			ratio = height / 2;
 		}
-		context.beginPath();
-		context.moveTo(x + ratio, y);
-		context.arcTo(x + width, y, x + width, y + height, ratio);
-		context.arcTo(x + width, y + height, x, y + height, ratio);
-		context.arcTo(x, y + height, x, y, ratio);
-		context.arcTo(x, y, x + width, y, ratio);
-		context.closePath();
+		ctx.beginPath();
+		ctx.moveTo(x + ratio, y);
+		ctx.arcTo(x + width, y, x + width, y + height, ratio);
+		ctx.arcTo(x + width, y + height, x, y + height, ratio);
+		ctx.arcTo(x, y + height, x, y, ratio);
+		ctx.arcTo(x, y, x + width, y, ratio);
+		ctx.closePath();
 	}
 
-	public showRestarButton() {
+	public showRestarButton(): void {
 		$('#restart').show();
 	}
 
-	public hideRestarButton() {
+	public hideRestarButton(): void {
 		$('#restart').hide();
 	}
 
-	public showBackMenuButton() {
+	public showBackMenuButton(): void {
 		$('#back-menu').show();
 	}
 
-	public hideBackMenuButton() {
+	public hideBackMenuButton(): void {
 		$('#back-menu').hide();
 	}
 
-	public showMenu() {
+	public showMenu(): void {
 		$("#menu").show();
 	}
 
-	public hideMenu() {
+	public hideMenu(): void {
 		$("#menu").hide();
 	}
 
-	public showGame() {
+	public showGame(): void {
 		$("#game").show();
 	}
 
-	public hideGame() {
+	public hideGame(): void {
 		$("#game").hide();
 	}
 }

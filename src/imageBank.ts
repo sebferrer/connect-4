@@ -12,7 +12,11 @@ export class ImageBank {
 		"assets/img/yellow.png",
 		"assets/img/red2.png",
 		"assets/img/yellow2.png",
-		"assets/img/grey.png"
+		"assets/img/grey.png",
+		"assets/img/corporate/1.png",
+		"assets/img/corporate/2.png",
+		"assets/img/corporate/3.png",
+		"assets/img/corporate/4.png"
 	];
 
 	constructor() {

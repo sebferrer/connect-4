@@ -1,4 +1,4 @@
-import { canvasH, canvasW, dynamicCtx, renderer, eventManager, record, recording, gameState, recordGeneration, editAIServices, contest } from "./main";
+import { canvasH, canvasW, dynamicCtx, renderer, eventManager, record, recording, gameState, recordGeneration, editAIServices, contest, IMAGE_BANK } from "./main";
 import { Board } from "./board";
 import { RecordingStep } from "./recording";
 import $ from "jquery";
@@ -81,6 +81,8 @@ export class GameState {
 		this.board.drawVictory(dynamicCtx);
 		this.board.drawLastMove(this.lastMove, dynamicCtx);
 
+		renderer.drawCorporate(dynamicCtx);
+
 		if(this.getPlayer(1).type === PlayerType.HUMAN || this.getPlayer(2).type === PlayerType.HUMAN) {
 			this.lineSelection();
 		}
@@ -132,13 +134,19 @@ export class GameState {
 		$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
 		function(data) {
 			console.log(JSON.stringify(data));
-			/*if(data.status !== "success") {
-				console.error("Error: no AI answer (bad status)");
+
+			if(!self.checkOutputConsistency(data.prediction, data.confidence)) {
+				console.error("Error: no AI answer");
 				gameState.currentPlayer.addPenalty();
 				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
+				gameState.play(gameState.currentPlayer, bestLine, -2);
+				self.playTimer.restart();
+				self.playing = false;
+				return;
 			}
-			else {*/
+
 			console.log("Prediction: "+ data.prediction + " >> " + data.confidence);
+
 			bestLine = data.prediction - 1;
 			if(!availableLines.includes(bestLine)) {
 				gameState.currentPlayer.addPenalty();
@@ -159,6 +167,22 @@ export class GameState {
 			self.playTimer.restart();
 			self.playing = false;
 		});
+	}
+
+	public checkOutputConsistency(prediction, confidence): boolean {
+		if(prediction == null || confidence == null) {
+			console.error("Consistency error: prediction or confidence must not be null");
+			return false;
+		}
+		else if(prediction < 1 || prediction > 7) {
+			console.error("Consistency error: prediction must be between 1 and 7");
+			return false;
+		}
+		else if(confidence < 0 || confidence > 1) {
+			console.error("COnsistency error: confidence must be between 0 and 1");
+			return false;
+		}
+		return true;
 	}
 
 	public autoplayMlpRng(probability: number): void {
@@ -236,6 +260,13 @@ export class GameState {
 			const json = recording.serialize(false, ";");
 
 			this.generateRecording(json);
+			
+			if(this.gameMode === GameMode.CONTEST) {
+				contest.getParticipantById(this.getPlayer(1).name).addPoints(1);
+				contest.getParticipantById(this.getPlayer(2).name).addPoints(1);
+				contest.getParticipantById(this.getPlayer(1).name).nbDraw++;
+				contest.getParticipantById(this.getPlayer(2).name).nbDraw++;
+			}
 
 			this.end();
 		}
@@ -255,9 +286,12 @@ export class GameState {
 			renderer.showBackMenuButton();
 		}
 		else {
+			contest.getParticipantById(this.getPlayer(1).name).addPenalties(this.getPlayer(1).nbPenalties);
+			contest.getParticipantById(this.getPlayer(2).name).addPenalties(this.getPlayer(2).nbPenalties);
 			contest.setNextRound();
 			if(contest.finished) {
 				this.status = 1;
+				this.generateScoreboard(contest.serializeParticipants());
 			}
 			else {
 				setTimeout(() => this.reinit("contest"), 5000);
@@ -273,6 +307,12 @@ export class GameState {
 		console.log(recording);
 		console.log(json);
 
+		if(this.gameMode === GameMode.CONTEST) {
+			contest.getParticipantById(player.name).nbWin++;
+			contest.getParticipantById(this.getOtherPlayer(player).name).nbLose++;
+			contest.getParticipantById(player.name).addPoints(3);
+		}
+
 		this.end();
 		
 		this.generateRecording(json);
@@ -283,10 +323,23 @@ export class GameState {
 			return;
 		}
 
-		$.post("http://127.0.0.1:8080/service/generate", { json: json },
+		$.post("http://127.0.0.1:8080/service/generate_duel", { json: json },
 			function(data) {
 			console.log(data);
 			// gameState.reinit();
+		}).fail(function() {
+			console.log("Error: The server isn't responding");
+		});
+	}
+
+	public generateScoreboard(json) {
+		if(!recordGeneration) {
+			return;
+		}
+
+		$.post("http://127.0.0.1:8080/service/generate_scoreboard", { json: json },
+			function(data) {
+			console.log(data);
 		}).fail(function() {
 			console.log("Error: The server isn't responding");
 		});
@@ -305,8 +358,11 @@ export class GameState {
 		}
 	}
 
-	public getOtherPlayer(): Player {
-		return this.currentPlayer.id === 1 ? this.getPlayer(2) : this.getPlayer(1);
+	public getOtherPlayer(player?: Player): Player {
+		if(player == null) {
+			return this.currentPlayer.id === 1 ? this.getPlayer(2) : this.getPlayer(1);
+		}
+		return player.id === 1 ? this.getPlayer(2) : this.getPlayer(1);
 	}
 
 	public getTimer(id: string): Timer {

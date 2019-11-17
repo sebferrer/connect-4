@@ -6,14 +6,13 @@ import { Recording } from "./recording";
 import { Contest } from "./contest";
 
 export let gameState: GameState;
+export let recording: Recording;
+export const contest = new Contest();
 
 export const record = true;
-export let recording: Recording;
-export const recordGeneration = true;
-
+export const recordGeneration = false;
 export const editAIServices = false;
-
-export const contest = new Contest();
+export const coporate = false;
 
 export const canvasW = 660;
 export const canvasH = 480;
