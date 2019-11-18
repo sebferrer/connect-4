@@ -157,6 +157,7 @@ export class GameState {
 
 			bestLine = data.prediction - 1;
 			if(!availableLines.includes(bestLine)) {
+				console.error("[PENALTY]: tried to play in line " + bestLine);
 				gameState.currentPlayer.addPenalty();
 				wrongLine = bestLine;
 				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
@@ -166,7 +167,7 @@ export class GameState {
 			self.playTimer.restart();
 			self.playing = false;
 		}).fail(function() {
-			console.log("Penalty: no AI answer");
+			console.error("[PENALTY]: no AI answer");
 			gameState.currentPlayer.addPenalty();
 			bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			gameState.play(gameState.currentPlayer, bestLine, -2);
