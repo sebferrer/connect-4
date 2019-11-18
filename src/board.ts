@@ -129,6 +129,9 @@ export class Board implements IDrawable {
 	}
 	
 	public nextRow(line: number): number {
+		if(this.tokens == null || this.tokens[line] == null) {
+			return -1;
+		}
 		for(let i = this.tokens[line].length - 1; i >= 0; i--) {
 			if([0, 3, 4].includes(this.tokens[line][i].value)) {
 				return i;

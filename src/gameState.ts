@@ -113,7 +113,7 @@ export class GameState {
 	}
 
 	public autoplayMlp(): void {
-		if(this.playing) {
+		if(this.playing || this.status === 1) {
 			console.log("already playing");
 			return;
 		}
@@ -131,12 +131,15 @@ export class GameState {
 		$.ajaxSetup({
 			timeout: 5000
 		});
-		$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
+		//$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
+		$.post(this.currentPlayer.aiService, { testchoice: 2, test1: "1", test2: 3, player: this.currentPlayer.id, board: currentStep },
 		function(data) {
 			console.log(JSON.stringify(data));
 
 			if(!self.checkOutputConsistency(data.prediction, data.confidence)) {
-				console.error("Error: no AI answer");
+				console.log("[PENALTY]: Bad AI outputs (prediction, confidence)");
+				console.log("Prediction: " + data.prediction);
+				console.log("Confidence: " + data.confidence);
 				gameState.currentPlayer.addPenalty();
 				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 				gameState.play(gameState.currentPlayer, bestLine, -2);
@@ -153,13 +156,12 @@ export class GameState {
 				wrongLine = bestLine;
 				bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			}
-			//}
 			gameState.play(gameState.currentPlayer, bestLine, wrongLine);
 
 			self.playTimer.restart();
 			self.playing = false;
 		}).fail(function() {
-			console.error("Error: no AI answer");
+			console.log("Penalty: no AI answer");
 			gameState.currentPlayer.addPenalty();
 			bestLine = availableLines[Math.floor(Math.random() * availableLines.length)];
 			gameState.play(gameState.currentPlayer, bestLine, -2);
@@ -172,14 +174,32 @@ export class GameState {
 	public checkOutputConsistency(prediction, confidence): boolean {
 		if(prediction == null || confidence == null) {
 			console.error("Consistency error: prediction or confidence must not be null");
+			console.log("Prediction: " + prediction);
+			console.log("Confidence: " + confidence)
 			return false;
 		}
-		else if(prediction < 1 || prediction > 7) {
-			console.error("Consistency error: prediction must be between 1 and 7");
+		else if(isNaN(prediction) || isNaN(confidence)) {
+			console.error("Consistency error: prediction or confidence must be numbers");
+			console.log("Prediction: " + prediction);
+			console.log("Confidence: " + confidence)
+			return false;
+		}
+		else if(!Number.isInteger(prediction)) {
+			console.error("Consistency error: prediction must be an integer");
+			console.log("Prediction: " + prediction);
+			console.log("Confidence: " + confidence)
+			return false;
+		}
+		if(prediction == null || confidence == null) {
+			console.error("Consistency error: prediction or confidence must not be null");
+			console.log("Prediction: " + prediction);
+			console.log("Confidence: " + confidence)
 			return false;
 		}
 		else if(confidence < 0 || confidence > 1) {
-			console.error("COnsistency error: confidence must be between 0 and 1");
+			console.error("Consistency error: confidence must be between 0 and 1");
+			console.log("Prediction: " + prediction);
+			console.log("Confidence: " + confidence)
 			return false;
 		}
 		return true;
@@ -294,6 +314,7 @@ export class GameState {
 				this.generateScoreboard(contest.serializeParticipants());
 			}
 			else {
+				this.status = 1;
 				setTimeout(() => this.reinit("contest"), 5000);
 			}
 		}
@@ -327,9 +348,8 @@ export class GameState {
 			function(data) {
 			console.log(data);
 			// gameState.reinit();
-		}).fail(function() {
-			console.log("Error: The server isn't responding");
-		});
+		})
+
 	}
 
 	public generateScoreboard(json) {
@@ -340,9 +360,7 @@ export class GameState {
 		$.post("http://127.0.0.1:8080/service/generate_scoreboard", { json: json },
 			function(data) {
 			console.log(data);
-		}).fail(function() {
-			console.log("Error: The server isn't responding");
-		});
+		})
 	}
 
 	public togglePlayer(): void {
