@@ -131,8 +131,7 @@ export class GameState {
 		$.ajaxSetup({
 			timeout: 5000
 		});
-		//$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
-		$.post(this.currentPlayer.aiService, { testchoice: 2, test1: "1", test2: 3, player: this.currentPlayer.id, board: currentStep },
+		$.post(this.currentPlayer.aiService, { player: this.currentPlayer.id, board: currentStep },
 		function(data) {
 			console.log(JSON.stringify(data));
 
