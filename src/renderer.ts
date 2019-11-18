@@ -293,6 +293,22 @@ export class Renderer {
 	public hideGame(): void {
 		$("#game").hide();
 	}
+
+	public showContestVersus(): void {
+		$("#contest-versus").show();
+	}
+
+	public hideContestVersus(): void {
+		$("#contest-versus").hide();
+	}
+
+	public setContestVersusPlayer1(value) {
+		$("#contest-versus-player-1").html(value);
+	}
+
+	public setContestVersusPlayer2(value) {
+		$("#contest-versus-player-2").html(value);
+	}
 }
 
 window.requestAnimationFrame = (function () {

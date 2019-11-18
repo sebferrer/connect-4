@@ -56,9 +56,15 @@ export class GameState {
 			renderer.updateRecording();
 		}
 		if(this.gameMode !== GameMode.CONTEST) {
+			renderer.hideContestVersus();
 			if(!editAIServices && gameState != null && gameState.currentPlayer.type === PlayerType.AI) {
 				gameState.autoplayMlp();
 			}
+		}
+		else {
+			renderer.setContestVersusPlayer1(this.getPlayer(1).name);
+			renderer.setContestVersusPlayer2(this.getPlayer(2).name);
+			renderer.showContestVersus();
 		}
 	}
 

@@ -129,3 +129,25 @@ body {
     overflow-y: auto;
     overflow-x: auto;
 }
+
+#contest-versus {
+    display: none;
+    z-index: 8;
+    position: absolute;
+}
+
+#contest-versus-player-1 {
+    position: absolute;
+    color: #ffbf02;
+    font-size: 3rem;
+    top: 1rem;
+    left: 1rem;
+}
+
+#contest-versus-player-2 {
+    position: absolute;
+    color: #d9070a;
+    font-size: 3rem;
+    top: 7rem;
+    left: 1rem;
+}
