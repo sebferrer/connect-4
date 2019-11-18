@@ -151,19 +151,19 @@ export class Renderer {
 			setAi.offset({'top': aiServices.offset().top + aiServices.height() + 20});
 			setAi.width(aiServices.width());
 			setAi.height((window.innerHeight - aiServices.offset().top - aiServices.height()) / 2);
-			setAiText.css('font-size', setAi.width() / 4);
-			setAiText.offset({'top': setAi.offset().top + setAi.height() / 2 - setAi.width() / 4 });
+			setAiText.css('font-size', setAi.width() / 7.5);
+			setAiText.offset({'top': setAi.offset().top + setAi.height() / 2 });
+
+			setAiStart.offset({'top': setAi.offset().top + setAi.height()});
+			setAiStart.width(aiServices.width());
+			setAiStart.height(window.innerHeight - setAiStart.offset().top - setAiStart.height());
+			setAiStartText.css('font-size', setAiStart.width() / 7.5);
+			setAiStartText.offset({'top': setAiStart.offset().top + setAiStart.height() / 2 });
 
 			if(gameState.getPlayer(1).type !== PlayerType.AI) {
 				setAiStart.hide();
 				return;
 			}
-
-			setAiStart.offset({'top': setAi.offset().top + setAi.height()});
-			setAiStart.width(aiServices.width());
-			setAiStart.height(window.innerHeight - setAiStart.offset().top - setAiStart.height());
-			setAiStartText.css('font-size', setAiStart.width() / 4);
-			setAiStartText.offset({'top': setAiStart.offset().top + setAiStart.height() / 2 - setAiStart.width() / 4 });
 		}
 	}
 

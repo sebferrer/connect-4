@@ -10,8 +10,8 @@ export let recording: Recording;
 export const contest = new Contest();
 
 export const record = true;
-export const recordGeneration = true;
-export const editAIServices = false;
+export const recordGeneration = false;
+export const editAIServices = true;
 export const coporate = true;
 
 export const canvasW = 660;

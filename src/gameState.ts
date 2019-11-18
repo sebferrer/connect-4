@@ -66,6 +66,10 @@ export class GameState {
 			renderer.setContestVersusPlayer2(this.getPlayer(2).name);
 			renderer.showContestVersus();
 		}
+
+		if(this.getPlayer(1).type === PlayerType.AI) {
+			$("#set-ai-start").show();
+		}
 	}
 
 	public reinit(mode): void {
@@ -73,8 +77,9 @@ export class GameState {
 	}
 
 	public menu(): void {
-		renderer.showMenu();
-		renderer.hideGame();
+		// renderer.showMenu();
+		// renderer.hideGame();
+		location.reload();
 	}
 
 	public update(): void {
@@ -419,8 +424,8 @@ export class GameState {
 
 	public start(): void {
 		if(this.getPlayer(1).type === PlayerType.AI && this.getPlayer(2).type !== PlayerType.AI) {
-			gameState.autoplayMlp();
 			this.status = 0;
+			gameState.autoplayMlp();
 		}
 		else if(this.getPlayer(1).type === PlayerType.AI && this.getPlayer(2).type === PlayerType.AI) {
 			this.status = 0;
